@@ -1,0 +1,20 @@
+https://docs.microsoft.com/fr-fr/ef/core/get-started/aspnetcore/existing-db
+Scaffold-DbContext "Data Source=SGEW0090\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Edmx bestaat niet meer in .NET Core.
+F5 altijd WebApi selecteren.
+
+todo : 
+react configureren zodat ie naar localhost:xxx wijst.
+nadenken over ihm
+
+todo call 
+    // GET: api/Config
+        [HttpGet]
+        public List<IConfig> GetAll()
+
+en dan alle dropdowns populaten.
+
+zie relnot3 !!!!
+todo react in appdata error
+
+DAHOUMANE-EXT Nacer <nacer.dahoumane-ext@fnacdarty.com> release manager
