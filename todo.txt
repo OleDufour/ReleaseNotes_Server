@@ -12,9 +12,10 @@ todo call
         [HttpGet]
         public List<IConfig> GetAll()
 
-en dan alle dropdowns populaten.
+en dan alle dropdowns en observable arrays populaten
 
-zie relnot3 !!!!
 todo react in appdata error
+
+validatie : een releasekey moet een = teken bevatten
 
 DAHOUMANE-EXT Nacer <nacer.dahoumane-ext@fnacdarty.com> release manager
