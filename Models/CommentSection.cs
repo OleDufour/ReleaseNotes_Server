@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WebApi.Models
 {
-    public partial class CountryCode
+    public partial class CommentSection
     {
-        public CountryCode()
+        public CommentSection()
         {
             ReleaseNote = new HashSet<ReleaseNote>();
         }

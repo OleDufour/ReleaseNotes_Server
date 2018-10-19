@@ -16,9 +16,10 @@ namespace WebApi.Models
         }
 
         public virtual DbSet<CleType> CleType { get; set; }
+        public virtual DbSet<CommentSection> CommentSection { get; set; }
         public virtual DbSet<CountryCode> CountryCode { get; set; }
         public virtual DbSet<Environment> Environment { get; set; }
-        public virtual DbSet<ReleaseName> ReleaseName { get; set; }
+        public virtual DbSet<Release> Release { get; set; }
         public virtual DbSet<ReleaseNote> ReleaseNote { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,7 +31,6 @@ namespace WebApi.Models
             }
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CleType>(entity =>
@@ -38,6 +38,13 @@ namespace WebApi.Models
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<CommentSection>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CountryCode>(entity =>
@@ -54,8 +61,10 @@ namespace WebApi.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<ReleaseName>(entity =>
+            modelBuilder.Entity<Release>(entity =>
             {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -64,39 +73,48 @@ namespace WebApi.Models
                 entity.Property(e => e.NickName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ReleaseDate).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<ReleaseNote>(entity =>
             {
                 entity.Property(e => e.CleTypeId).HasColumnName("CleTypeID");
 
+                entity.Property(e => e.CommentSectionId).HasColumnName("CommentSectionID");
+
                 entity.Property(e => e.CountryCodeId).HasColumnName("CountryCodeID");
 
                 entity.Property(e => e.EnvironmentId).HasColumnName("EnvironmentID");
 
-                entity.Property(e => e.ReleaseNameId).HasColumnName("ReleaseNameID");
+                entity.Property(e => e.ReleaseId).HasColumnName("ReleaseID");
 
                 entity.Property(e => e.Value).HasMaxLength(3000);
 
                 entity.HasOne(d => d.CleType)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.CleTypeId)
-                    .HasConstraintName("FK__ReleaseNo__CleTy__17036CC0");
+                    .HasConstraintName("FK__ReleaseNo__CleTy__2F9A1060");
+
+                entity.HasOne(d => d.CommentSection)
+                    .WithMany(p => p.ReleaseNote)
+                    .HasForeignKey(d => d.CommentSectionId)
+                    .HasConstraintName("FK__ReleaseNo__Comme__336AA144");
 
                 entity.HasOne(d => d.CountryCode)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.CountryCodeId)
-                    .HasConstraintName("FK__ReleaseNo__Count__17F790F9");
+                    .HasConstraintName("FK__ReleaseNo__Count__308E3499");
 
                 entity.HasOne(d => d.Environment)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.EnvironmentId)
-                    .HasConstraintName("FK__ReleaseNo__Envir__18EBB532");
+                    .HasConstraintName("FK__ReleaseNo__Envir__318258D2");
 
-                entity.HasOne(d => d.ReleaseName)
+                entity.HasOne(d => d.Release)
                     .WithMany(p => p.ReleaseNote)
-                    .HasForeignKey(d => d.ReleaseNameId)
-                    .HasConstraintName("FK__ReleaseNo__Relea__19DFD96B");
+                    .HasForeignKey(d => d.ReleaseId)
+                    .HasConstraintName("FK__ReleaseNo__Relea__32767D0B");
             });
         }
     }

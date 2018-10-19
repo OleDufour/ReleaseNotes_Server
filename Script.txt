@@ -1,12 +1,26 @@
 USE [ReleaseNotes]
 GO
+drop table ReleaseNote;
 
-drop table ReleaseName;
+Go
+CREATE TABLE [dbo].[ReleaseNote]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	CountryCodeID INT NOT NULL,
+	EnvironmentID int not null,
+	CleTypeID int not null,
+	ReleaseID int not null,
+	CommentSectionID int not null,
+    [Value] NVARCHAR(3000) NULL
+)
+
+USE [ReleaseNotes]
+GO 
 drop table Release;
 Go
 CREATE TABLE [dbo].[Release]
 (
-    [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [ID] INT NOT NULL PRIMARY KEY IDENTITY, 
     [Name] VARCHAR(50) not NULL,
     NickName VARCHAR(50) NULL,
 	ReleaseDate datetime null,
@@ -14,7 +28,7 @@ CREATE TABLE [dbo].[Release]
 
 Insert into Release (Name, NickName, ReleaseDate) values('18.2', 'Son Goku', null) ;
 Insert into Release (Name, NickName, ReleaseDate) values('18.2.5', 'Son Goku', null) ;
-Insert into Release (Name, nickname, ReleaseDate) values('18.3', Vegeta, null) ;
+Insert into Release (Name, nickname, ReleaseDate) values('18.3', 'Vegeta', null) ;
 
 
 drop table CleType;
@@ -58,6 +72,7 @@ CREATE TABLE [dbo].[CountryCode]
     [Name] VARCHAR(50) NULL
 )
 
+
 Insert into CountryCode (Name) values('FR') ;
 Insert into CountryCode (Name) values('BE1') ;
 Insert into CountryCode (Name) values('BE2') ;
@@ -66,27 +81,19 @@ Insert into CountryCode (Name) values('ES') ;
 Insert into CountryCode (Name) values('PT') ;
 Insert into CountryCode (Name) values('Fnac Pro FR') ;
 
-
-drop table ReleaseNote;
-
+USE [ReleaseNotes]
+GO
+drop table CommentSection;
 Go
-CREATE TABLE [dbo].[ReleaseNote]
+CREATE TABLE [dbo].[CommentSection]
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
-	CountryCodeID INT NOT NULL,
-	EnvironmentID int not null,
-	CleTypeID int not null,
-	ReleaseID int not null,
-    [Value] NVARCHAR(3000) NULL
-)
+    [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+	[Name] VARCHAR(50) NULL
+) 
+
 
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CleTypeID) REFERENCES CleType(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(ID)  ON DELETE CASCADE;
-
-ALTER TABLE CleType add CONSTRAINT [PK_ID] PRIMARY KEY (ID);
-ALTER TABLE Environment add CONSTRAINT [PK_ID] PRIMARY KEY (ID);
-ALTER TABLE CountryCode add CONSTRAINT [PK_ID] PRIMARY KEY (ID);
-ALTER TABLE Release add CONSTRAINT [PK_ID] PRIMARY KEY (ID);
-ALTER TABLE ReleaseNote add CONSTRAINT [PK_ID] PRIMARY KEY (ID);
+ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentSectionID) REFERENCES CommentSection(ID)  ON DELETE CASCADE;
