@@ -26,11 +26,16 @@ namespace WebApi.Controllers
         {
             List<IConfig> l = new List<IConfig>();
 
-            var c = _context.CountryCode as IEnumerable<IConfig>;
-            var d = _context.CleType as IEnumerable<IConfig>;
-            l.AddRange(c.ToList ());
-            l.AddRange(d.ToList());
-
+            var release = _context.Release  as IEnumerable<IConfig>;
+            var countryCode = _context.CountryCode as IEnumerable<IConfig>;
+            var environment = _context.Environment as IEnumerable<IConfig>;
+            var cleType = _context.CleType as IEnumerable<IConfig>;
+            
+            l.AddRange(release.ToList());
+            l.AddRange(countryCode.ToList());
+            l.AddRange(environment.ToList());
+            l.AddRange(cleType.ToList());
+            
             return l;
         }
 

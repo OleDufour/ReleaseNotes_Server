@@ -14815,11 +14815,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit\\WebApi.csproj",
+      "projectUniqueName": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit2\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit\\WebApi.csproj",
+      "projectPath": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit2\\WebApi.csproj",
       "packagesPath": "C:\\Users\\ODUFOUR\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit\\obj\\",
+      "outputPath": "C:\\Users\\ODUFOUR\\OLE\\ReleaseNotes\\serverGit2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
