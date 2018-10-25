@@ -16,7 +16,7 @@ namespace WebApi.Models
         }
 
         public virtual DbSet<CleType> CleType { get; set; }
-        public virtual DbSet<CommentSection> CommentSection { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<CountryCode> CountryCode { get; set; }
         public virtual DbSet<Environment> Environment { get; set; }
         public virtual DbSet<Release> Release { get; set; }
@@ -40,7 +40,7 @@ namespace WebApi.Models
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<CommentSection>(entity =>
+            modelBuilder.Entity<Comment>(entity =>
             {
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
@@ -81,7 +81,7 @@ namespace WebApi.Models
             {
                 entity.Property(e => e.CleTypeId).HasColumnName("CleTypeID");
 
-                entity.Property(e => e.CommentSectionId).HasColumnName("CommentSectionID");
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
 
                 entity.Property(e => e.CountryCodeId).HasColumnName("CountryCodeID");
 
@@ -96,9 +96,9 @@ namespace WebApi.Models
                     .HasForeignKey(d => d.CleTypeId)
                     .HasConstraintName("FK__ReleaseNo__CleTy__2F9A1060");
 
-                entity.HasOne(d => d.CommentSection)
+                entity.HasOne(d => d.Comment)
                     .WithMany(p => p.ReleaseNote)
-                    .HasForeignKey(d => d.CommentSectionId)
+                    .HasForeignKey(d => d.CommentId)
                     .HasConstraintName("FK__ReleaseNo__Comme__336AA144");
 
                 entity.HasOne(d => d.CountryCode)

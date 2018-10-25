@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WebApi.Models
 {
-    public partial class CommentSection
+    public partial class Comment
     {
-        public CommentSection()
+        public Comment()
         {
             ReleaseNote = new HashSet<ReleaseNote>();
         }

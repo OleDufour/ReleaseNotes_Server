@@ -3,14 +3,14 @@ GO
 drop table ReleaseNote;
 
 Go
-CREATE TABLE [dbo].[ReleaseNote]
+CREATE TABLE [dbo].[ReleaseNote] 
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
 	CountryCodeID INT NOT NULL,
 	EnvironmentID int not null,
 	CleTypeID int not null,
 	ReleaseID int not null,
-	CommentSectionID int not null,
+	CommentID int not null,
     [Value] NVARCHAR(3000) NULL
 )
 
@@ -83,9 +83,9 @@ Insert into CountryCode (Name) values('Fnac Pro FR') ;
 
 USE [ReleaseNotes]
 GO
-drop table CommentSection;
+drop table Comment;
 Go
-CREATE TABLE [dbo].[CommentSection]
+CREATE TABLE [dbo].[Comment]
 (
     [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
 	[Name] VARCHAR(50) NULL
@@ -96,4 +96,4 @@ ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CleTypeID) REFERENCES CleType(I
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(ID)  ON DELETE CASCADE;
-ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentSectionID) REFERENCES CommentSection(ID)  ON DELETE CASCADE;
+ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
