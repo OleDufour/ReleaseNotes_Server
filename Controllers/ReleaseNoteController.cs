@@ -87,17 +87,33 @@ namespace WebApi.Controllers
         // POST: api/ReleaseNote
         [HttpPost]
         public async Task<IActionResult> PostReleaseNote(dynamic json)
-        {    
+        {
             Rootobject l = JsonConvert.DeserializeObject<Rootobject>(json.ToString());
 
             for (int i = 0; i < l.releaseNoteArray.Length; i++)
             {
                 ReleaseNote r = l.releaseNoteArray[i];
-                _context.ReleaseNote.Add(r);
-                await _context.SaveChangesAsync();
+                if (r.CountryCodeId == 0) throw new Exception("CountryCodeId==0");
+                if (r.EnvironmentId == 0) throw new Exception("EnvironmentId==0");
+                if (r.ReleaseId == 0) throw new Exception("ReleaseId==0");
+                if (r.CleTypeId == 0) throw new Exception("CleTypeId==0");
 
+                ReleaseNote rNewOrUpdate = await _context.ReleaseNote.SingleOrDefaultAsync(x =>
+               x.CountryCodeId == r.CountryCodeId
+               && x.EnvironmentId == r.EnvironmentId
+               && x.ReleaseId == r.ReleaseId
+               && x.CleTypeId == r.CleTypeId
+                );
+
+                if (rNewOrUpdate == null)
+                    _context.ReleaseNote.Add(r);
+                else
+                {
+                    rNewOrUpdate.Value = r.Value;// update existing value
+                }
+                await _context.SaveChangesAsync();
             }
-            return Ok();         
+            return Ok();
         }
 
         //// POST: api/ReleaseNote

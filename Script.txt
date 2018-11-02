@@ -97,3 +97,6 @@ ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES Count
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
+
+
+CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID);
