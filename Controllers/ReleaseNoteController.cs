@@ -12,6 +12,17 @@ using WebApi.Models;
 
 namespace WebApi.Controllers
 {
+    public class ReleaseNoteParms
+    {
+        public int ReleaseId { get; set; }
+        public int CleTypeId { get; set; }
+        public int[] CountryCodeId { get; set; }
+        public int[] EnvironmentId { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class ReleaseNoteController : ControllerBase
@@ -47,6 +58,35 @@ namespace WebApi.Controllers
             }
 
             return Ok(ReleaseNote);
+        }
+
+        public IQueryable<ReleaseNote> GetAllReleaseNotes()
+        {
+            var t = _context.ReleaseNote.AsQueryable(); //.Include("CountryCode")
+
+            return t;
+        }
+
+        public async Task<List<ReleaseNote>> GetAllUrlsByUser(int userId)
+        {
+            return await GetAllReleaseNotes().Where(u => u.CountryCodeId == userId).ToListAsync();
+        }
+
+        [HttpPost]
+        [Route("SearchReleaseNotes")] // So the complete route is : /api/ReleaseNote/SearchReleaseNotes 
+        public async Task<IEnumerable<ReleaseNote>> SearchReleaseNotes(ReleaseNoteParms parms)
+        {
+            var relNotes = await GetAllReleaseNotes().Where(r =>
+             r.ReleaseId == parms.ReleaseId &&
+             // r.EnvironmentId == parms.CleTypeId &&
+             //  parms.CountryCodeId.Contains(r.CountryCodeId) &&
+             //  parms.EnvironmentId.Contains(r.EnvironmentId) &&
+             r.Key.Contains(parms.Key)
+            ).ToListAsync();
+
+
+
+            return relNotes;
         }
 
         // PUT: api/ReleaseNote/5
