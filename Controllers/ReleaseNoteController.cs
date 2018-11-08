@@ -103,6 +103,7 @@ namespace WebApi.Controllers
                && x.EnvironmentId == r.EnvironmentId
                && x.ReleaseId == r.ReleaseId
                && x.CleTypeId == r.CleTypeId
+               && x.Key == r.Key
                 );
 
                 if (rNewOrUpdate == null)

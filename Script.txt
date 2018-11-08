@@ -100,4 +100,4 @@ ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(I
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
 
 
-CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID);
+CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID, [Key]);
