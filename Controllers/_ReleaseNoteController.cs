@@ -26,11 +26,11 @@ namespace WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ReleaseNoteController : ControllerBase
+    public class _ReleaseNoteController : ControllerBase
     {
         private readonly ReleaseNotesContext _context;
 
-        public ReleaseNoteController(ReleaseNotesContext context)
+        public _ReleaseNoteController(ReleaseNotesContext context)
         {
             _context = context;
         }
@@ -137,32 +137,32 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostReleaseNote(dynamic json)
         {
-            Rootobject l = JsonConvert.DeserializeObject<Rootobject>(json.ToString());
+            //Rootobject l = JsonConvert.DeserializeObject<Rootobject>(json.ToString());
 
-            for (int i = 0; i < l.releaseNoteArray.Length; i++)
-            {
-                ReleaseNote r = l.releaseNoteArray[i];
-                if (r.CountryCodeId == 0) throw new Exception("CountryCodeId==0");
-                if (r.EnvironmentId == 0) throw new Exception("EnvironmentId==0");
-                if (r.ReleaseId == 0) throw new Exception("ReleaseId==0");
-                if (r.CleTypeId == 0) throw new Exception("CleTypeId==0");
+            //for (int i = 0; i < l.releaseNoteArray.Length; i++)
+            //{
+            //    ReleaseNote r = l.releaseNoteArray[i];
+            //    if (r.CountryCodeId == 0) throw new Exception("CountryCodeId==0");
+            //    if (r.EnvironmentId == 0) throw new Exception("EnvironmentId==0");
+            //    if (r.ReleaseId == 0) throw new Exception("ReleaseId==0");
+            //    if (r.CleTypeId == 0) throw new Exception("CleTypeId==0");
 
-                ReleaseNote rNewOrUpdate = await _context.ReleaseNote.SingleOrDefaultAsync(x =>
-               x.CountryCodeId == r.CountryCodeId
-               && x.EnvironmentId == r.EnvironmentId
-               && x.ReleaseId == r.ReleaseId
-               && x.CleTypeId == r.CleTypeId
-               && x.KeyName == r.KeyName
-                );
+            //    ReleaseNote rNewOrUpdate = await _context.ReleaseNote.SingleOrDefaultAsync(x =>
+            //   x.CountryCodeId == r.CountryCodeId
+            //   && x.EnvironmentId == r.EnvironmentId
+            //   && x.ReleaseId == r.ReleaseId
+            //   && x.CleTypeId == r.CleTypeId
+            //   && x.KeyName == r.KeyName
+            //    );
 
-                if (rNewOrUpdate == null)
-                    _context.ReleaseNote.Add(r);
-                else
-                {
-                    rNewOrUpdate.Value = r.Value;// update existing value
-                }
-                await _context.SaveChangesAsync();
-            }
+            //    if (rNewOrUpdate == null)
+            //        _context.ReleaseNote.Add(r);
+            //    else
+            //    {
+            //        rNewOrUpdate.Value = r.Value;// update existing value
+            //    }
+            //    await _context.SaveChangesAsync();
+            //}
             return Ok();
         }
 

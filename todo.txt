@@ -2,7 +2,9 @@ https://docs.microsoft.com/fr-fr/ef/core/get-started/aspnetcore/existing-db
 Scaffold-DbContext "Data Source=SGEW0090\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -Force  -OutputDir Models
 Edmx bestaat niet meer in .NET Core.
 F5 altijd WebApi selecteren.
+Controller maken : Rechtsklikken op Controllers, Api with actions
 
+----------------------------------------------------
 todo : 
 react configureren zodat ie naar localhost:xxx wijst.
 nadenken over ihm

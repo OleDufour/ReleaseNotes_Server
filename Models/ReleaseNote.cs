@@ -1,43 +1,28 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WebApi.Models
 {
-
-    public class Rootobject
+    public partial class ReleaseNote
     {
-        public ReleaseNote[] releaseNoteArray { get; set; }
-    }
+        public ReleaseNote()
+        {
+            CountryCodeReleaseNote = new HashSet<CountryCodeReleaseNote>();
+            EnvironmentReleaseNote = new HashSet<EnvironmentReleaseNote>();
+        }
 
-    public class ReleaseNote
-    {
-        public int ReleaseId { get; set; }
-        public int CleTypeId { get; set; }
+        public int Id { get; set; }
         public int CountryCodeId { get; set; }
         public int EnvironmentId { get; set; }
+        public int CleTypeId { get; set; }
+        public int ReleaseId { get; set; }
         public int? CommentId { get; set; }
         public string KeyName { get; set; }
         public string Value { get; set; }
-        public int Id { get; set; }
+
         public CleType CleType { get; set; }
-        public Comment Comment { get; set; }
-        public CountryCode CountryCode { get; set; }
-        public Environment Environment { get; set; }
         public Release Release { get; set; }
+        public ICollection<CountryCodeReleaseNote> CountryCodeReleaseNote { get; set; }
+        public ICollection<EnvironmentReleaseNote> EnvironmentReleaseNote { get; set; }
     }
-
-
-
-
-
-    //      public partial class ReleaseNote:ReleaseNote2
-    //  {
-    //public int Id { get; set; }
-    //      public CleType CleType { get; set; }
-    //      public Comment Comment { get; set; }
-    //      public CountryCode CountryCode { get; set; }
-    //      public Environment Environment { get; set; }
-    //      public Release Release { get; set; }
-    //  }
 }

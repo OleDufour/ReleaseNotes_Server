@@ -18,7 +18,9 @@ namespace WebApi.Models
         public virtual DbSet<CleType> CleType { get; set; }
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<CountryCode> CountryCode { get; set; }
+        public virtual DbSet<CountryCodeReleaseNote> CountryCodeReleaseNote { get; set; }
         public virtual DbSet<Environment> Environment { get; set; }
+        public virtual DbSet<EnvironmentReleaseNote> EnvironmentReleaseNote { get; set; }
         public virtual DbSet<Release> Release { get; set; }
         public virtual DbSet<ReleaseNote> ReleaseNote { get; set; }
 
@@ -54,11 +56,41 @@ namespace WebApi.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<CountryCodeReleaseNote>(entity =>
+            {
+                entity.HasKey(e => new { e.CountryCodeId, e.ReleaseNoteId });
+
+                entity.HasOne(d => d.CountryCode)
+                    .WithMany(p => p.CountryCodeReleaseNote)
+                    .HasForeignKey(d => d.CountryCodeId)
+                    .HasConstraintName("FK__CountryCo__Count__47FBA9D6");
+
+                entity.HasOne(d => d.ReleaseNote)
+                    .WithMany(p => p.CountryCodeReleaseNote)
+                    .HasForeignKey(d => d.ReleaseNoteId)
+                    .HasConstraintName("FK__CountryCo__Relea__49E3F248");
+            });
+
             modelBuilder.Entity<Environment>(entity =>
             {
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<EnvironmentReleaseNote>(entity =>
+            {
+                entity.HasKey(e => new { e.EnvironmentId, e.ReleaseNoteId });
+
+                entity.HasOne(d => d.Environment)
+                    .WithMany(p => p.EnvironmentReleaseNote)
+                    .HasForeignKey(d => d.EnvironmentId)
+                    .HasConstraintName("FK__Environme__Envir__48EFCE0F");
+
+                entity.HasOne(d => d.ReleaseNote)
+                    .WithMany(p => p.EnvironmentReleaseNote)
+                    .HasForeignKey(d => d.ReleaseNoteId)
+                    .HasConstraintName("FK__Environme__Relea__4AD81681");
             });
 
             modelBuilder.Entity<Release>(entity =>
@@ -79,6 +111,10 @@ namespace WebApi.Models
 
             modelBuilder.Entity<ReleaseNote>(entity =>
             {
+                entity.HasIndex(e => new { e.CountryCodeId, e.EnvironmentId, e.CleTypeId, e.ReleaseId, e.KeyName })
+                    .HasName("IX_ReleaseNotes")
+                    .IsUnique();
+
                 entity.Property(e => e.CleTypeId).HasColumnName("CleTypeID");
 
                 entity.Property(e => e.CommentId).HasColumnName("CommentID");
@@ -87,35 +123,21 @@ namespace WebApi.Models
 
                 entity.Property(e => e.EnvironmentId).HasColumnName("EnvironmentID");
 
+                entity.Property(e => e.KeyName).HasMaxLength(3000);
+
                 entity.Property(e => e.ReleaseId).HasColumnName("ReleaseID");
 
-                entity.Property(e => e.KeyName).HasMaxLength(3000);
                 entity.Property(e => e.Value).HasMaxLength(3000);
 
                 entity.HasOne(d => d.CleType)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.CleTypeId)
-                    .HasConstraintName("FK__ReleaseNo__CleTy__2F9A1060");
-
-                entity.HasOne(d => d.Comment)
-                    .WithMany(p => p.ReleaseNote)
-                    .HasForeignKey(d => d.CommentId)
-                    .HasConstraintName("FK__ReleaseNo__Comme__336AA144");
-
-                entity.HasOne(d => d.CountryCode)
-                    .WithMany(p => p.ReleaseNote)
-                    .HasForeignKey(d => d.CountryCodeId)
-                    .HasConstraintName("FK__ReleaseNo__Count__308E3499");
-
-                entity.HasOne(d => d.Environment)
-                    .WithMany(p => p.ReleaseNote)
-                    .HasForeignKey(d => d.EnvironmentId)
-                    .HasConstraintName("FK__ReleaseNo__Envir__318258D2");
+                    .HasConstraintName("FK__ReleaseNo__CleTy__46136164");
 
                 entity.HasOne(d => d.Release)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.ReleaseId)
-                    .HasConstraintName("FK__ReleaseNo__Relea__32767D0B");
+                    .HasConstraintName("FK__ReleaseNo__Relea__4707859D");
             });
         }
     }
