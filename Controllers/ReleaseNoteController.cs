@@ -14,11 +14,12 @@ namespace WebApi.Controllers
 {
     public class ReleaseNoteParms
     {
+        // public int ReleaseNoteId { get; set; }
         public int ReleaseId { get; set; }
         public int CleTypeId { get; set; }
         public int[] CountryCodeId { get; set; }
         public int[] EnvironmentId { get; set; }
-        public string Key { get; set; }
+        public string KeyName { get; set; }
         public string Value { get; set; }
     }
 
@@ -67,26 +68,34 @@ namespace WebApi.Controllers
             return t;
         }
 
-        public async Task<List<ReleaseNote>> GetAllUrlsByUser(int userId)
-        {
-            return await GetAllReleaseNotes().Where(u => u.CountryCodeId == userId).ToListAsync();
-        }
+
 
         [HttpPost]
         [Route("SearchReleaseNotes")] // So the complete route is : /api/ReleaseNote/SearchReleaseNotes 
-        public async Task<IEnumerable<ReleaseNote>> SearchReleaseNotes(ReleaseNoteParms parms)
+        public async Task<IEnumerable<ReleaseNoteParms>> SearchReleaseNotes(ReleaseNoteParms parms)
         {
-            var relNotes = await GetAllReleaseNotes().Where(r =>
+            List<ReleaseNote> releaseNotesFound = await GetAllReleaseNotes().Where(r =>
              r.ReleaseId == parms.ReleaseId &&
              // r.EnvironmentId == parms.CleTypeId &&
              //  parms.CountryCodeId.Contains(r.CountryCodeId) &&
              //  parms.EnvironmentId.Contains(r.EnvironmentId) &&
-             r.Key.Contains(parms.Key)
+             r.KeyName.Contains(parms.KeyName)
             ).ToListAsync();
 
+            List<ReleaseNoteParms> lReleaseNotes = new List<ReleaseNoteParms>();
+            var keys = releaseNotesFound.GroupBy(p => p.KeyName, (key) => new { key });
+            var countries = releaseNotesFound.GroupBy(p => p.CountryCodeId).Select(x => x.Key);
 
+            foreach (var k in keys)
+            {
+                int CleTypeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CleTypeId).Select(x => x.Key).First();
+                int[] countryCodeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CountryCodeId).Select(x => x.Key).ToArray();
+                int[] environmentId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.EnvironmentId).Select(x => x.Key).ToArray();
+                string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
+                lReleaseNotes.Add(new ReleaseNoteParms { KeyName = k.Key, Value = value, CountryCodeId = countryCodeId, EnvironmentId = environmentId });
+            }
 
-            return relNotes;
+            return lReleaseNotes;
         }
 
         // PUT: api/ReleaseNote/5
@@ -143,7 +152,7 @@ namespace WebApi.Controllers
                && x.EnvironmentId == r.EnvironmentId
                && x.ReleaseId == r.ReleaseId
                && x.CleTypeId == r.CleTypeId
-               && x.Key == r.Key
+               && x.KeyName == r.KeyName
                 );
 
                 if (rNewOrUpdate == null)
@@ -175,25 +184,26 @@ namespace WebApi.Controllers
         //}
 
 
-        // DELETE: api/ReleaseNote/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReleaseNote([FromRoute] int id)
+        // DELETE: api/ReleaseNote/omniture.url.blabla
+        [HttpDelete("{keyName}")]
+        public async Task<IActionResult> DeleteReleaseNote([FromRoute] string keyName)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var ReleaseNote = await _context.ReleaseNote.FindAsync(id);
-            if (ReleaseNote == null)
+            ReleaseNote rDelete = await _context.ReleaseNote.SingleOrDefaultAsync(x => x.KeyName == keyName);
+
+
+            if (rDelete != null)
             {
-                return NotFound();
+
+                _context.ReleaseNote.Remove(rDelete);
+                await _context.SaveChangesAsync();
             }
 
-            _context.ReleaseNote.Remove(ReleaseNote);
-            await _context.SaveChangesAsync();
-
-            return Ok(ReleaseNote);
+            return Ok();
         }
 
         private bool ReleaseNoteExists(int id)

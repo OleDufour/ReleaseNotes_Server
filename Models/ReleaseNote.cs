@@ -16,8 +16,8 @@ namespace WebApi.Models
         public int CleTypeId { get; set; }
         public int CountryCodeId { get; set; }
         public int EnvironmentId { get; set; }
-        public int CommentId { get; set; }
-        public string Key { get; set; }
+        public int? CommentId { get; set; }
+        public string KeyName { get; set; }
         public string Value { get; set; }
         public int Id { get; set; }
         public CleType CleType { get; set; }

@@ -1,5 +1,27 @@
 USE [ReleaseNotes]
 GO
+drop table CountryCodeReleaseNote;
+Go
+CREATE TABLE [dbo].[CountryCodeReleaseNote]
+(
+    [CountryCodeId] INT NOT NULL , 
+    [ReleaseNoteId] INT NOT NULL , 
+     primary key ([CountryCodeId], [ReleaseNoteId])
+)
+
+USE [ReleaseNotes]
+GO
+drop table EnvironmentReleaseNote;
+Go
+CREATE TABLE [dbo].[EnvironmentReleaseNote]
+(
+    [EnvironmentId] INT NOT NULL , 
+    [ReleaseNoteId] INT NOT NULL , 
+     primary key ([EnvironmentId], [ReleaseNoteId])
+)
+
+USE [ReleaseNotes]
+GO
 drop table ReleaseNote;
 
 Go
@@ -10,9 +32,9 @@ CREATE TABLE [dbo].[ReleaseNote]
 	EnvironmentID int not null,
 	CleTypeID int not null,
 	ReleaseID int not null,
-	CommentID int not null,
-	[Key] NVARCHAR(3000) NULL,
-    [Value] NVARCHAR(3000) NULL
+	CommentID int null,
+	 KeyName NVARCHAR(1000) NULL,
+    [Value] NVARCHAR(1000) NULL
 )
 
 USE [ReleaseNotes]
@@ -72,8 +94,6 @@ CREATE TABLE [dbo].[CountryCode]
     [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [Name] VARCHAR(50) NULL
 )
-
-
 Insert into CountryCode (Name) values('FR') ;
 Insert into CountryCode (Name) values('BE1') ;
 Insert into CountryCode (Name) values('BE2') ;
@@ -94,10 +114,24 @@ CREATE TABLE [dbo].[Comment]
 
 
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CleTypeID) REFERENCES CleType(ID)  ON DELETE CASCADE;
-ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode(ID)  ON DELETE CASCADE;
-ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
+
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(ID)  ON DELETE CASCADE;
-ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
+--ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[CountryCodeReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode(ID)  ON DELETE CASCADE;
+ALTER TABLE [dbo].[EnvironmentReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
+ALTER TABLE [dbo].[CountryCodeReleaseNote] ADD FOREIGN KEY (ReleaseNoteID) REFERENCES ReleaseNote(ID)  ON DELETE CASCADE;
+ALTER TABLE [dbo].[EnvironmentReleaseNote] ADD FOREIGN KEY (ReleaseNoteID) REFERENCES ReleaseNote(ID)  ON DELETE CASCADE;
 
 
-CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID, [Key]);
+insert into ReleaseNote(CountryCodeID ,	EnvironmentID ,	CleTypeID ,	ReleaseID ,	CommentID ,	 KeyName ,    [Value] )  values  (1, 1, 1,1, null, 'abc', 'value abc')
+insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(1,1)
+insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(2,1)
+insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(3,1)
+insert into EnvironmentReleaseNote(EnvironmentId, ReleaseNoteId ) values(1,1)
+insert into EnvironmentReleaseNote(EnvironmentId, ReleaseNoteId ) values(2,1)
+insert into EnvironmentReleaseNote(EnvironmentId, ReleaseNoteId ) values(3,1)
+
+
+--- TOO BIG !!
+CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID,  KeyName);

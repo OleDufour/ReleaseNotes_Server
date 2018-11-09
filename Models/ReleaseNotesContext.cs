@@ -89,7 +89,7 @@ namespace WebApi.Models
 
                 entity.Property(e => e.ReleaseId).HasColumnName("ReleaseID");
 
-                entity.Property(e => e.Key).HasMaxLength(3000);
+                entity.Property(e => e.KeyName).HasMaxLength(3000);
                 entity.Property(e => e.Value).HasMaxLength(3000);
 
                 entity.HasOne(d => d.CleType)
