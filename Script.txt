@@ -27,9 +27,7 @@ drop table ReleaseNote;
 Go
 CREATE TABLE [dbo].[ReleaseNote] 
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
-	CountryCodeID INT NOT NULL,
-	EnvironmentID int not null,
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,	 
 	CleTypeID int not null,
 	ReleaseID int not null,
 	CommentID int null,
@@ -114,9 +112,8 @@ CREATE TABLE [dbo].[Comment]
 
 
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CleTypeID) REFERENCES CleType(ID)  ON DELETE CASCADE;
-
 ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (ReleaseID) REFERENCES Release(ID)  ON DELETE CASCADE;
---ALTER TABLE [dbo].[ReleaseNote] ADD FOREIGN KEY (CommentID) REFERENCES Comment(ID)  ON DELETE CASCADE;
+
 
 ALTER TABLE [dbo].[CountryCodeReleaseNote] ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode(ID)  ON DELETE CASCADE;
 ALTER TABLE [dbo].[EnvironmentReleaseNote] ADD FOREIGN KEY (EnvironmentID) REFERENCES Environment(ID)  ON DELETE CASCADE;
@@ -124,7 +121,7 @@ ALTER TABLE [dbo].[CountryCodeReleaseNote] ADD FOREIGN KEY (ReleaseNoteID) REFER
 ALTER TABLE [dbo].[EnvironmentReleaseNote] ADD FOREIGN KEY (ReleaseNoteID) REFERENCES ReleaseNote(ID)  ON DELETE CASCADE;
 
 
-insert into ReleaseNote(CountryCodeID ,	EnvironmentID ,	CleTypeID ,	ReleaseID ,	CommentID ,	 KeyName ,    [Value] )  values  (1, 1, 1,1, null, 'abc', 'value abc')
+insert into ReleaseNote(CleTypeID ,	ReleaseID ,	CommentID ,	 KeyName ,    [Value] )  values  (  1,1, null, 'abc', 'value abc')
 insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(1,1)
 insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(2,1)
 insert into CountryCodeReleaseNote(CountryCodeID, ReleaseNoteId ) values(3,1)
@@ -134,4 +131,4 @@ insert into EnvironmentReleaseNote(EnvironmentId, ReleaseNoteId ) values(3,1)
 
 
 --- TOO BIG !!
-CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (CountryCodeID, EnvironmentID, CleTypeID, ReleaseID,  KeyName);
+CREATE UNIQUE NONCLUSTERED INDEX IX_ReleaseNotes ON ReleaseNote (  CleTypeID, ReleaseID,  KeyName);

@@ -16,5 +16,7 @@ namespace WebApi.Models
         public DateTime? ReleaseDate { get; set; }
 
         public ICollection<ReleaseNote> ReleaseNote { get; set; }
+
+        public string PropertyName { get { return "Release"; } }
     }
 }

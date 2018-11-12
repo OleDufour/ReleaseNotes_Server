@@ -63,12 +63,12 @@ namespace WebApi.Models
                 entity.HasOne(d => d.CountryCode)
                     .WithMany(p => p.CountryCodeReleaseNote)
                     .HasForeignKey(d => d.CountryCodeId)
-                    .HasConstraintName("FK__CountryCo__Count__47FBA9D6");
+                    .HasConstraintName("FK__CountryCo__Count__7F4BDEC0");
 
                 entity.HasOne(d => d.ReleaseNote)
                     .WithMany(p => p.CountryCodeReleaseNote)
                     .HasForeignKey(d => d.ReleaseNoteId)
-                    .HasConstraintName("FK__CountryCo__Relea__49E3F248");
+                    .HasConstraintName("FK__CountryCo__Relea__01342732");
             });
 
             modelBuilder.Entity<Environment>(entity =>
@@ -85,12 +85,12 @@ namespace WebApi.Models
                 entity.HasOne(d => d.Environment)
                     .WithMany(p => p.EnvironmentReleaseNote)
                     .HasForeignKey(d => d.EnvironmentId)
-                    .HasConstraintName("FK__Environme__Envir__48EFCE0F");
+                    .HasConstraintName("FK__Environme__Envir__004002F9");
 
                 entity.HasOne(d => d.ReleaseNote)
                     .WithMany(p => p.EnvironmentReleaseNote)
                     .HasForeignKey(d => d.ReleaseNoteId)
-                    .HasConstraintName("FK__Environme__Relea__4AD81681");
+                    .HasConstraintName("FK__Environme__Relea__02284B6B");
             });
 
             modelBuilder.Entity<Release>(entity =>
@@ -111,7 +111,7 @@ namespace WebApi.Models
 
             modelBuilder.Entity<ReleaseNote>(entity =>
             {
-                entity.HasIndex(e => new { e.CountryCodeId, e.EnvironmentId, e.CleTypeId, e.ReleaseId, e.KeyName })
+                entity.HasIndex(e => new { e.CleTypeId, e.ReleaseId, e.KeyName })
                     .HasName("IX_ReleaseNotes")
                     .IsUnique();
 
@@ -119,25 +119,21 @@ namespace WebApi.Models
 
                 entity.Property(e => e.CommentId).HasColumnName("CommentID");
 
-                entity.Property(e => e.CountryCodeId).HasColumnName("CountryCodeID");
-
-                entity.Property(e => e.EnvironmentId).HasColumnName("EnvironmentID");
-
-                entity.Property(e => e.KeyName).HasMaxLength(3000);
+                entity.Property(e => e.KeyName).HasMaxLength(1000);
 
                 entity.Property(e => e.ReleaseId).HasColumnName("ReleaseID");
 
-                entity.Property(e => e.Value).HasMaxLength(3000);
+                entity.Property(e => e.Value).HasMaxLength(1000);
 
                 entity.HasOne(d => d.CleType)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.CleTypeId)
-                    .HasConstraintName("FK__ReleaseNo__CleTy__46136164");
+                    .HasConstraintName("FK__ReleaseNo__CleTy__7D63964E");
 
                 entity.HasOne(d => d.Release)
                     .WithMany(p => p.ReleaseNote)
                     .HasForeignKey(d => d.ReleaseId)
-                    .HasConstraintName("FK__ReleaseNo__Relea__4707859D");
+                    .HasConstraintName("FK__ReleaseNo__Relea__7E57BA87");
             });
         }
     }

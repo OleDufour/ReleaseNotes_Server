@@ -12,8 +12,6 @@ namespace WebApi.Models
         }
 
         public int Id { get; set; }
-        public int CountryCodeId { get; set; }
-        public int EnvironmentId { get; set; }
         public int CleTypeId { get; set; }
         public int ReleaseId { get; set; }
         public int? CommentId { get; set; }

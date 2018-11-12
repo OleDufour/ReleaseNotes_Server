@@ -14,5 +14,6 @@ namespace WebApi.Models
         public string Name { get; set; }
 
         public ICollection<EnvironmentReleaseNote> EnvironmentReleaseNote { get; set; }
+        public string PropertyName { get { return "Environment"; } }
     }
 }

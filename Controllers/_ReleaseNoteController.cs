@@ -12,16 +12,17 @@ using WebApi.Models;
 
 namespace WebApi.Controllers
 {
-    public class ReleaseNoteParms
-    {
-        // public int ReleaseNoteId { get; set; }
-        public int ReleaseId { get; set; }
-        public int CleTypeId { get; set; }
-        public int[] CountryCodeId { get; set; }
-        public int[] EnvironmentId { get; set; }
-        public string KeyName { get; set; }
-        public string Value { get; set; }
-    }
+    //public class ReleaseNoteParms
+    //{
+    //    // public int ReleaseNoteId { get; set; }
+    //    public int ReleaseId { get; set; }
+    //    public int CleTypeId { get; set; }
+    //    public int? CommentId { get; set; }
+    //    public int[] CountryCodeId { get; set; }
+    //    public int[] EnvironmentId { get; set; }
+    //    public string KeyName { get; set; }
+    //    public string Value { get; set; }
+    //}
 
 
     [Route("api/[controller]")]
@@ -70,33 +71,33 @@ namespace WebApi.Controllers
 
 
 
-        [HttpPost]
-        [Route("SearchReleaseNotes")] // So the complete route is : /api/ReleaseNote/SearchReleaseNotes 
-        public async Task<IEnumerable<ReleaseNoteParms>> SearchReleaseNotes(ReleaseNoteParms parms)
-        {
-            List<ReleaseNote> releaseNotesFound = await GetAllReleaseNotes().Where(r =>
-             r.ReleaseId == parms.ReleaseId &&
-             // r.EnvironmentId == parms.CleTypeId &&
-             //  parms.CountryCodeId.Contains(r.CountryCodeId) &&
-             //  parms.EnvironmentId.Contains(r.EnvironmentId) &&
-             r.KeyName.Contains(parms.KeyName)
-            ).ToListAsync();
+      //  [HttpPost]
+      //  [Route("SearchReleaseNotes")] // So the complete route is : /api/ReleaseNote/SearchReleaseNotes 
+      //  public async Task<IEnumerable<ReleaseNoteParms>> SearchReleaseNotes(ReleaseNoteParms parms)
+      //  {
+      //      List<ReleaseNote> releaseNotesFound = await GetAllReleaseNotes().Where(r =>
+      //       r.ReleaseId == parms.ReleaseId &&
+      //       // r.EnvironmentId == parms.CleTypeId &&
+      //       //  parms.CountryCodeId.Contains(r.CountryCodeId) &&
+      //       //  parms.EnvironmentId.Contains(r.EnvironmentId) &&
+      //       r.KeyName.Contains(parms.KeyName)
+      //      ).ToListAsync();
 
-            List<ReleaseNoteParms> lReleaseNotes = new List<ReleaseNoteParms>();
-            var keys = releaseNotesFound.GroupBy(p => p.KeyName, (key) => new { key });
-            var countries = releaseNotesFound.GroupBy(p => p.CountryCodeId).Select(x => x.Key);
+      //      List<ReleaseNoteParms> lReleaseNotes = new List<ReleaseNoteParms>();
+      //      var keys = releaseNotesFound.GroupBy(p => p.KeyName, (key) => new { key });
+      ////      var countries = releaseNotesFound.GroupBy(p => p.CountryCodeId).Select(x => x.Key);
 
-            foreach (var k in keys)
-            {
-                int CleTypeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CleTypeId).Select(x => x.Key).First();
-                int[] countryCodeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CountryCodeId).Select(x => x.Key).ToArray();
-                int[] environmentId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.EnvironmentId).Select(x => x.Key).ToArray();
-                string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
-                lReleaseNotes.Add(new ReleaseNoteParms { KeyName = k.Key, Value = value, CountryCodeId = countryCodeId, EnvironmentId = environmentId });
-            }
+      //      //foreach (var k in keys)
+      //      //{
+      //      //    int CleTypeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CleTypeId).Select(x => x.Key).First();
+      //      //    int[] countryCodeId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.CountryCodeId).Select(x => x.Key).ToArray();
+      //      //    int[] environmentId = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.EnvironmentId).Select(x => x.Key).ToArray();
+      //      //    string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
+      //      //    lReleaseNotes.Add(new ReleaseNoteParms { KeyName = k.Key, Value = value, CountryCodeId = countryCodeId, EnvironmentId = environmentId });
+      //      //}
 
-            return lReleaseNotes;
-        }
+      //      return lReleaseNotes;
+      //  }
 
         // PUT: api/ReleaseNote/5
         //[HttpPut("{id}")]
