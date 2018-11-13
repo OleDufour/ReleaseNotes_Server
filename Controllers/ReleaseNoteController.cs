@@ -11,7 +11,7 @@ namespace WebApi.Controllers
 {
     public class ReleaseNoteParms
     {
-        // public int ReleaseNoteId { get; set; }
+        public int ReleaseNoteId { get; set; }
         public int ReleaseId { get; set; }
         public int CleTypeId { get; set; }
         public int? CommentId { get; set; }
@@ -177,12 +177,12 @@ namespace WebApi.Controllers
             { 
                 int CleTypeId = rnf.CleTypeId ;
           //     var rn = FindUniqueReleaseNote(releaseNotesFound, parms.ReleaseId, parms.CleTypeId, parms.KeyName);
-                int[] countryCodeId = rnf.CountryCodeReleaseNote.Select(x => x.CountryCodeId).ToArray();
-                int[] environmentId = rnf.EnvironmentReleaseNote.Select(x => x.EnvironmentId).ToArray();
+                int[] countryCodeId = rnf.CountryCodeReleaseNote.Select(x => x.CountryCodeId).OrderBy(x=> x).ToArray();
+                int[] environmentId = rnf.EnvironmentReleaseNote.Select(x => x.EnvironmentId).OrderBy(x => x).ToArray();
 
 
                 //  string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
-                lReleaseNotes.Add(new ReleaseNoteParms { KeyName = rnf.KeyName, Value = rnf.Value, CountryCodeId = countryCodeId, EnvironmentId = environmentId, CleTypeId =rnf.CleTypeId });
+                lReleaseNotes.Add(new ReleaseNoteParms { ReleaseNoteId=rnf.Id,  KeyName = rnf.KeyName, Value = rnf.Value, CountryCodeId = countryCodeId, EnvironmentId = environmentId, CleTypeId =rnf.CleTypeId });
             }
 
             return lReleaseNotes;
