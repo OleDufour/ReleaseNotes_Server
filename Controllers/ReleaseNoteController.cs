@@ -111,9 +111,11 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
             ReleaseNote releaseNote = new ReleaseNote();
-            var rnTest = await _context.ReleaseNote.FindAsync(7);
+
+
             var rn = await _context.ReleaseNote.Where(x => x.KeyName == rnp.KeyName && x.ReleaseId == rnp.ReleaseId && rnp.CleTypeId == rnp.CleTypeId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleOrDefaultAsync();
-            if (rn == null)
+
+            if (rnp.ReleaseNoteId == 0 && rn == null)
             {
                 releaseNote = new ReleaseNote { KeyName = rnp.KeyName, Value = rnp.Value, CleTypeId = rnp.CleTypeId, ReleaseId = rnp.ReleaseId };
                 foreach (int id in rnp.CountryCodeId)
@@ -125,7 +127,11 @@ namespace WebApi.Controllers
                 _context.ReleaseNote.Add(releaseNote);
             }
             else
-            {
+            { // TODO 
+              // var rn = await _context.ReleaseNote.Where(x => x.KeyName == rnp.KeyName && x.ReleaseId == rnp.ReleaseId && rnp.CleTypeId == rnp.CleTypeId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleOrDefaultAsync();
+                if (rnp.ReleaseNoteId != 0)
+                    rn = await _context.ReleaseNote.Where(x => x.Id == rnp.ReleaseNoteId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleAsync();
+
                 _context.CountryCodeReleaseNote.RemoveRange(rn.CountryCodeReleaseNote);
                 _context.EnvironmentReleaseNote.RemoveRange(rn.EnvironmentReleaseNote);
 
@@ -144,7 +150,7 @@ namespace WebApi.Controllers
             await _context.SaveChangesAsync();
 
 
-            return Ok(releaseNote);
+            return Ok();
             //   return CreatedAtAction("GetReleaseNote", new { id = rn.Id }, rn);
         }
 
@@ -174,15 +180,15 @@ namespace WebApi.Controllers
             var countries = releaseNotesFound.GroupBy(p => p.CountryCodeReleaseNote).Select(x => x.Key);
 
             foreach (var rnf in releaseNotesFound)
-            { 
-                int CleTypeId = rnf.CleTypeId ;
-          //     var rn = FindUniqueReleaseNote(releaseNotesFound, parms.ReleaseId, parms.CleTypeId, parms.KeyName);
-                int[] countryCodeId = rnf.CountryCodeReleaseNote.Select(x => x.CountryCodeId).OrderBy(x=> x).ToArray();
+            {
+                int CleTypeId = rnf.CleTypeId;
+                //     var rn = FindUniqueReleaseNote(releaseNotesFound, parms.ReleaseId, parms.CleTypeId, parms.KeyName);
+                int[] countryCodeId = rnf.CountryCodeReleaseNote.Select(x => x.CountryCodeId).OrderBy(x => x).ToArray();
                 int[] environmentId = rnf.EnvironmentReleaseNote.Select(x => x.EnvironmentId).OrderBy(x => x).ToArray();
 
 
                 //  string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
-                lReleaseNotes.Add(new ReleaseNoteParms { ReleaseNoteId=rnf.Id,  KeyName = rnf.KeyName, Value = rnf.Value, CountryCodeId = countryCodeId, EnvironmentId = environmentId, CleTypeId =rnf.CleTypeId });
+                lReleaseNotes.Add(new ReleaseNoteParms { ReleaseNoteId = rnf.Id, KeyName = rnf.KeyName, Value = rnf.Value, CountryCodeId = countryCodeId, EnvironmentId = environmentId, CleTypeId = rnf.CleTypeId });
             }
 
             return lReleaseNotes;
