@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 
 namespace WebApi.Models
 {
@@ -8,7 +7,9 @@ namespace WebApi.Models
         public int EnvironmentId { get; set; }
         public int ReleaseNoteId { get; set; }
 
+        [JsonIgnore]// -> to avoid runtime   Error Self referencing loop detected for type
         public Environment Environment { get; set; }
+        [JsonIgnore]// -> to avoid runtime   Error Self referencing loop detected for type
         public ReleaseNote ReleaseNote { get; set; }
     }
 }

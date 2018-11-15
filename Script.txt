@@ -107,7 +107,7 @@ Go
 CREATE TABLE [dbo].[Comment]
 (
     [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-	[Name] VARCHAR(50) NULL
+	[Name] VARCHAR(50) not NULL
 ) 
 
 

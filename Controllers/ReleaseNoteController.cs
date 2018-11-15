@@ -68,39 +68,39 @@ namespace WebApi.Controllers
         }
 
         // PUT: api/ReleaseNote/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReleaseNote([FromRoute] int id, [FromBody] ReleaseNote releaseNote)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutReleaseNote([FromRoute] int id, [FromBody] ReleaseNote releaseNote)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != releaseNote.Id)
-            {
-                return BadRequest();
-            }
+        //    if (id != releaseNote.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(releaseNote).State = EntityState.Modified;
+        //    _context.Entry(releaseNote).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReleaseNoteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ReleaseNoteExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/ReleaseNote
         [HttpPost]
@@ -112,10 +112,9 @@ namespace WebApi.Controllers
             }
             ReleaseNote releaseNote = new ReleaseNote();
 
-
             var rn = await _context.ReleaseNote.Where(x => x.KeyName == rnp.KeyName && x.ReleaseId == rnp.ReleaseId && rnp.CleTypeId == rnp.CleTypeId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleOrDefaultAsync();
 
-            if (rnp.ReleaseNoteId == 0 && rn == null)
+            if (rn == null)
             {
                 releaseNote = new ReleaseNote { KeyName = rnp.KeyName, Value = rnp.Value, CleTypeId = rnp.CleTypeId, ReleaseId = rnp.ReleaseId };
                 foreach (int id in rnp.CountryCodeId)
@@ -126,39 +125,52 @@ namespace WebApi.Controllers
 
                 _context.ReleaseNote.Add(releaseNote);
             }
-            else
-            { // TODO 
-              // var rn = await _context.ReleaseNote.Where(x => x.KeyName == rnp.KeyName && x.ReleaseId == rnp.ReleaseId && rnp.CleTypeId == rnp.CleTypeId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleOrDefaultAsync();
-                if (rnp.ReleaseNoteId != 0)
-                    rn = await _context.ReleaseNote.Where(x => x.Id == rnp.ReleaseNoteId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleAsync();
-
-                _context.CountryCodeReleaseNote.RemoveRange(rn.CountryCodeReleaseNote);
-                _context.EnvironmentReleaseNote.RemoveRange(rn.EnvironmentReleaseNote);
-
-                foreach (int id in rnp.CountryCodeId)
-                    rn.CountryCodeReleaseNote.Add(new CountryCodeReleaseNote { CountryCodeId = id });
-
-                foreach (int id in rnp.EnvironmentId)
-                    rn.EnvironmentReleaseNote.Add(new EnvironmentReleaseNote { EnvironmentId = id });
-
-                rn.Value = rnp.Value;
-                rn.CleTypeId = rnp.CleTypeId; // The same key cannot occur in tech and func ?? yes !! maar waarschuwing !!!
-                rn.CommentId = rnp.CommentId;
-            }
-
 
             await _context.SaveChangesAsync();
-
 
             return Ok();
             //   return CreatedAtAction("GetReleaseNote", new { id = rn.Id }, rn);
         }
 
 
+        // update existing releasenote
+        [HttpPut]
+        public async Task<IActionResult> PutReleaseNote(ReleaseNoteParms rnp)
+        {
+            ReleaseNote existingReleaseNote = await _context.ReleaseNote.Where(x => x.Id == rnp.ReleaseNoteId).Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").SingleAsync();
+
+            _context.CountryCodeReleaseNote.RemoveRange(existingReleaseNote.CountryCodeReleaseNote);
+            _context.EnvironmentReleaseNote.RemoveRange(existingReleaseNote.EnvironmentReleaseNote);
+
+            foreach (int id in rnp.CountryCodeId)
+                existingReleaseNote.CountryCodeReleaseNote.Add(new CountryCodeReleaseNote { CountryCodeId = id });
+
+            foreach (int id in rnp.EnvironmentId)
+                existingReleaseNote.EnvironmentReleaseNote.Add(new EnvironmentReleaseNote { EnvironmentId = id });
+
+            existingReleaseNote.KeyName = rnp.KeyName;
+            existingReleaseNote.Value = rnp.Value;
+            existingReleaseNote.CleTypeId = rnp.CleTypeId; // The same key cannot occur in tech and func ?? yes !! maar waarschuwing !!!
+            existingReleaseNote.CommentId = rnp.CommentId;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReleaseNoteExists(rnp.ReleaseNoteId))               
+                    return NotFound();                
+                else throw;
+            }
+
+            return Ok(existingReleaseNote);
+        }
+
+
         public IQueryable<ReleaseNote> GetAllReleaseNotes()
         {
             var t = _context.ReleaseNote.Include("CountryCodeReleaseNote").Include("EnvironmentReleaseNote").AsQueryable(); //.Include("CountryCode")
-
             return t;
         }
 
