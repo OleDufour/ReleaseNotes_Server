@@ -47,20 +47,20 @@ namespace WebApi.Controllers
         }
 
         // PUT: api/Comment/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment([FromRoute] int id, [FromBody] Comment Comment)
+        [HttpPut]
+        public async Task<IActionResult> PutComment( Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != Comment.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != Comment.Id)
+            //{
+            //    return BadRequest();
+            //}
 
-            _context.Entry(Comment).State = EntityState.Modified;
+            _context.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CommentExists(id))
+                if (!CommentExists(comment.Id))
                 {
                     return NotFound();
                 }
@@ -83,17 +83,17 @@ namespace WebApi.Controllers
 
         // POST: api/Comment
         [HttpPost]
-        public async Task<IActionResult> PostComment([FromBody] Comment Comment)
+        public async Task<IActionResult> PostComment([FromBody] Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Comment.Add(Comment);
+            _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetComment", new { id = Comment.Id }, Comment);
+            return Ok( comment);
         }
 
         // DELETE: api/Comment/5
