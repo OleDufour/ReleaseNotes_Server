@@ -116,7 +116,7 @@ namespace WebApi.Controllers
 
             if (rn == null)
             {
-                releaseNote = new ReleaseNote { KeyName = rnp.KeyName, Value = rnp.Value, CleTypeId = rnp.CleTypeId, ReleaseId = rnp.ReleaseId };
+                releaseNote = new ReleaseNote { KeyName = rnp.KeyName, Value = rnp.Value, CleTypeId = rnp.CleTypeId, ReleaseId = rnp.ReleaseId, CommentId = rnp.CommentId };
                 foreach (int id in rnp.CountryCodeId)
                     releaseNote.CountryCodeReleaseNote.Add(new CountryCodeReleaseNote { CountryCodeId = id });
 
@@ -159,8 +159,8 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReleaseNoteExists(rnp.ReleaseNoteId))               
-                    return NotFound();                
+                if (!ReleaseNoteExists(rnp.ReleaseNoteId))
+                    return NotFound();
                 else throw;
             }
 
@@ -200,7 +200,16 @@ namespace WebApi.Controllers
 
 
                 //  string value = releaseNotesFound.Where(x => x.KeyName == k.Key).GroupBy(p => p.Value).Select(x => x.Key).First();
-                lReleaseNotes.Add(new ReleaseNoteParms { ReleaseNoteId = rnf.Id, KeyName = rnf.KeyName, Value = rnf.Value, CountryCodeId = countryCodeId, EnvironmentId = environmentId, CleTypeId = rnf.CleTypeId });
+                lReleaseNotes.Add(new ReleaseNoteParms
+                {
+                    ReleaseNoteId = rnf.Id,
+                    KeyName = rnf.KeyName,
+                    Value = rnf.Value,
+                    CountryCodeId = countryCodeId,
+                    EnvironmentId = environmentId,
+                    CleTypeId = rnf.CleTypeId,
+                    CommentId = rnf.CommentId
+                });
             }
 
             return lReleaseNotes;
