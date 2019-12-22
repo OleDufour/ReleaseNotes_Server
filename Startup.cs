@@ -16,6 +16,8 @@ using WebApi.Model;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using System.Data.SqlClient;
+using System;
 
 namespace WebApi
 {
@@ -40,11 +42,12 @@ namespace WebApi
         {
             services.AddMemoryCache();   // die moet er bij
 
-            var connection = @"Data Source=SGEW0090\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True";
+            var connection = @"Data Source=DESKTOP-K1IFK3F\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True";
+           
             services.AddDbContext<ReleaseNotesContext>(options => options.UseSqlServer(connection));
 
             services.AddCors();
-            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
+           // services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddMvc();
             services.AddAutoMapper();
 
