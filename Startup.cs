@@ -30,24 +30,19 @@ namespace WebApi
 
         public IConfiguration Configuration { get; }
 
-        //public void ConfigureDevelopmentServices(IServiceCollection services)
-        //{
-        //    var connection = @"Data Source=SGEW0090\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True";
-        //    services.AddDbContext<ReleaseNotesContext>(options => options.UseSqlServer(connection));
 
-        //}
 
-            // This method gets called by the runtime. Use this method to add services to the container.
-            public void ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();   // die moet er bij
 
             var connection = @"Data Source=DESKTOP-K1IFK3F\SQLEXPRESS;Initial Catalog=ReleaseNotes;Integrated Security=True";
-           
+
             services.AddDbContext<ReleaseNotesContext>(options => options.UseSqlServer(connection));
 
             services.AddCors();
-           // services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
+            // services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddMvc();
             services.AddAutoMapper();
 
@@ -107,8 +102,8 @@ namespace WebApi
             var entryOptions = new MemoryCacheEntryOptions().SetPriority(CacheItemPriority.NeverRemove);
 
             string json = System.IO.File.ReadAllText("C:\\__OLE\\Dotnet3\\Dotnet3\\ftpClients.txt");
-            List<FtpClient>ftpClients = JsonConvert.DeserializeObject<List<FtpClient>>(json);
-            
+            List<FtpClient> ftpClients = JsonConvert.DeserializeObject<List<FtpClient>>(json);
+
             //Some examples of me putting data in the cache
             cache.Set("ftpClients", ftpClients, entryOptions);
         }
